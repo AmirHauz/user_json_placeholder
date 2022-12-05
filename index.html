@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!--GUI-->
+    USERNAME<input id="username">
+    EMAIL<input id="email">
+    <button onclick="add_user()">Add user</button>
+    <br>
+    <button onclick="loadData()"> load the data!</button>
+    <div id="display"></div>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        const MY_SERVER = "https://jsonplaceholder.typicode.com/users"
+        const loadData = async() => {
+            //get (READ)
+            const res =await axios.get(MY_SERVER)//get data from server
+            display.innerHTML = res.data.map(user => `<h1><button onclick="ups_user(${user.id})">update</button><button onclick="del_user(${user.id})">del</button>username: ${user.username}, user email: ${user.email}  </h1><hr>`).join('')
+           console.log(res.data)
+
+        }
+        
+
+        //post (CREATE)
+        const add_user = () => {
+            axios.post(MY_SERVER, { username: username.value, email: email.value }).then((res) => console.log(res.data))
+        }
+        //delete (DELETE)
+        const del_user = (id) => {
+            console.log(id)//cheacks if the id of the button is the correct id to delete
+            axios.delete(MY_SERVER +id).then((res)=> console.log(res.data))
+        }
+        
+        const ups_user=async(id)=>{
+            //put (UPDATE)
+            console.log(MY_SERVER +id)
+            await axios.put(MY_SERVER +id,{  username: username.value, email: email.value }).then((res))
+            loadData()
+        }
+    </script>
+
+</body>
+
+</html>
